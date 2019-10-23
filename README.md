@@ -1,6 +1,6 @@
-# movies_app
+# FlutterMoviesApp
 
-A new Flutter project.
+Demo application made on flutter, that shows a movies catalog
 
 ## Getting Started
 
