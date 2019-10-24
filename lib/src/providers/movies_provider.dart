@@ -18,5 +18,6 @@ class MoviesProvider{
       final decodedData = jsonDecode(response.body);
       print(decodedData);
       final movies = Movies.fromJsonList(decodedData['results']);
+      return movies.items;
     }
 }

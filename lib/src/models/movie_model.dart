@@ -60,4 +60,13 @@ class Movie {
     overview =          json["overview"];
     releaseDate =       json["release_date"];
   }
+
+  String get posterImageUrl{
+    if(posterPath == null){
+      return 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png';
+    }
+    else{
+      return 'https://image.tmdb.org/t/p/w500/$posterPath';
+    }
+  }
 }
