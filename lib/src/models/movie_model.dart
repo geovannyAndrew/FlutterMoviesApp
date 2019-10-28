@@ -69,4 +69,13 @@ class Movie {
       return 'https://image.tmdb.org/t/p/w500/$posterPath';
     }
   }
+
+  String get backgroundImageUrl{
+    if(posterPath == null){
+      return 'https://cdn.shopify.com/s/files/1/0533/2089/files/placeholder-images-image_large.png';
+    }
+    else{
+      return 'https://image.tmdb.org/t/p/w500/$backdropPath';
+    }
+  }
 }

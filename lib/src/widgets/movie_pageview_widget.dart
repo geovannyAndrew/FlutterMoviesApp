@@ -45,15 +45,16 @@ class MoviePageView extends StatelessWidget {
       margin: EdgeInsets.only(right: 8.0),
       child: Column(
         children: <Widget>[
-          /*FadeInImage(
-            image: NetworkImage(movie.posterImageUrl),
-            placeholder: AssetImage('assets/no-image.jpg'),
-            fit: BoxFit.fill,
-          )*/
           ClipRRect(
             borderRadius: BorderRadius.circular(12.0),
-            child: Image.network(movie.posterImageUrl,
+            child: FadeInImage(
+              image: NetworkImage(movie.posterImageUrl),
+              placeholder: AssetImage('assets/img/no-image.jpg'),
+              fit: BoxFit.fill,
               height: 160,
+              fadeInDuration: Duration(
+                milliseconds: 400
+              ),
             ),
           ),
           Text(movie.title,
