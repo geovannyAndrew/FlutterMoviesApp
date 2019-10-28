@@ -8,13 +8,13 @@ class MoviesProvider{
     String _apiKey = '313c09930994b08741a0bc4bb9711cfc';
     String _url = 'api.themoviedb.org';
     String _language = 'en';
-    int _pagePopulars = 0;
 
+
+    int _pagePopulars = 0;
+    bool _loadingPopulars = false;
     List<Movie> _populars = new List();
     final _popularsStreamController = StreamController<List<Movie>>.broadcast();
-
     Function(List<Movie>) get popularsSink => _popularsStreamController.sink.add;
-
     Stream<List<Movie>> get popularsStream => _popularsStreamController.stream; 
 
     disposeStreams(){
@@ -37,6 +37,9 @@ class MoviesProvider{
     }
 
     Future<List<Movie>> getPopulars() async{
+      if(_loadingPopulars) return [];
+      _loadingPopulars = true;
+      print('LOading new items...');
       _pagePopulars++;
       final decodedData = await _get('3/movie/popular',
       {
@@ -47,6 +50,7 @@ class MoviesProvider{
       final movies = Movies.fromJsonList(decodedData['results']);
       _populars.addAll(movies.items);
       popularsSink(_populars);
+      _loadingPopulars = false;
       return movies.items;
     } 
 
