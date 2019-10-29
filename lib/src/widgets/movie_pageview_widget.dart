@@ -41,12 +41,13 @@ class MoviePageView extends StatelessWidget {
 
 
   Widget _buildCardMovie(BuildContext context, Movie movie){
+    movie.heroId = 'movie_pageview_${movie.id}';
     final card = Container(
       margin: EdgeInsets.only(right: 8.0),
       child: Column(
         children: <Widget>[
           Hero(
-            tag: movie.id,
+            tag: movie.heroId,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(12.0),
               child: FadeInImage(
