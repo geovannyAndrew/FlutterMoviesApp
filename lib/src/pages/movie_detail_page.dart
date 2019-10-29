@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/src/models/actor_model.dart';
 import 'package:movies_app/src/models/movie_model.dart';
+import 'package:movies_app/src/providers/movies_provider.dart';
 
 class MovieDetailPage extends StatelessWidget {
   const MovieDetailPage({Key key}) : super(key: key);
@@ -21,9 +23,7 @@ class MovieDetailPage extends StatelessWidget {
                 ),
                 _posterTitle(context, movie),
                 _description(movie),
-                _description(movie),
-                _description(movie),
-                _description(movie),
+                _buildCasting(movie),
               ]
             ),
           )
@@ -110,6 +110,66 @@ class MovieDetailPage extends StatelessWidget {
       ),
       child: Text(movie.overview,
         textAlign: TextAlign.justify,
+      ),
+    );
+  }
+
+  Widget _buildCasting(Movie movie) {
+    final moviesProvider = MoviesProvider();
+
+    return FutureBuilder(
+      future: moviesProvider.getCast(movie.id.toString()),
+      builder: (BuildContext context, AsyncSnapshot<List> snapshot) {
+        if(snapshot.hasData){
+          return _buildCastPageView(snapshot.data);
+        }
+        else{
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
+
+  Widget _buildCastPageView(List<Actor> cast) {
+    return SizedBox(
+      height: 200,
+      child: PageView.builder(
+        controller: PageController(
+          initialPage: 1,
+          viewportFraction: 0.3,
+        ),
+        pageSnapping: false,
+        itemCount: cast.length,
+        itemBuilder: (BuildContext context, int index){
+          final actor = cast[index];
+          return _cardActor(context, actor);
+        },
+      ),
+    );
+  }
+
+  Widget _cardActor(BuildContext context, Actor actor){
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 8.0),
+      child: Column(
+        children: <Widget>[
+          ClipRRect(
+            borderRadius: BorderRadius.circular(16.0),
+            child: FadeInImage(
+              image: NetworkImage(actor.profilePathUrl),
+              placeholder: AssetImage('assets/img/no-image.jpg'),
+              fit: BoxFit.cover,
+              height: 150,
+            ),
+          ),
+          Text(actor.name,
+            style: Theme.of(context).textTheme.subtitle,
+            textAlign: TextAlign.center,
+            overflow: TextOverflow.ellipsis,
+          )
+        ],
       ),
     );
   }
