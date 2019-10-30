@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/src/models/movie_model.dart';
+import 'package:movies_app/src/providers/movies_provider.dart';
 
 class DataSearch extends SearchDelegate{
 
   String _selectedMovie = '';
+  final _moviesProvider = MoviesProvider();
 
   final movies = [
     'Spiderman',
@@ -59,6 +62,8 @@ class DataSearch extends SearchDelegate{
     );
   }
 
+  /*
+  This is for mocking build suggestions
   @override
   Widget buildSuggestions(BuildContext context) {
     //Suggestions that appear when person writes
@@ -78,6 +83,47 @@ class DataSearch extends SearchDelegate{
             showResults(context);
           },
         );
+      },
+    );
+  }*/
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    //Suggestions that appear when person writes
+    if(query.isEmpty){
+      return Container();
+    }
+    return FutureBuilder(
+      future: _moviesProvider.searchMovie(query),
+      builder: (BuildContext context, AsyncSnapshot<List<Movie>> snapshot){
+        final movies = snapshot.data;
+        if(snapshot.hasData){
+          return ListView.builder(
+            itemCount: movies.length,
+            itemBuilder: (BuildContext context, int index){
+              final movie = movies[index];
+              movie.heroId = 'search_movie_${movie.id}';
+              return ListTile(
+                leading: Hero(
+                  tag: movie.heroId,
+                  child: FadeInImage(
+                    image: NetworkImage(movie.posterImageUrl),
+                    placeholder: AssetImage('assets/img/no-image.jpg'),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+                title: Text(movie.title),
+                subtitle: Text(movie.originalTitle),
+                onTap: () => Navigator.pushNamed(context, '/detail_movie', arguments: movie),
+              );
+            },
+          );
+        }
+        else{
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
       },
     );
   }
